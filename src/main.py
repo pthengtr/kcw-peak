@@ -1,8 +1,8 @@
 import os
-
 from dotenv import load_dotenv
 
-from src.peak_client import get_client_token, test_products
+from src.peak_client import get_client_token
+from src.contacts import ensure_contact_from_row
 
 
 def run():
@@ -25,18 +25,28 @@ def run():
 
     if not result["ok"]:
         print("❌ TOKEN FAILED:", result)
-        return   # graceful exit
+        return
 
     client_token = result["token"]
     print("Client token acquired.")
 
-    # print("Testing GET /products ...")
-    # resp = test_products(
-    #     base_url=base_url,
-    #     connect_id=connect_id,
-    #     user_token=user_token,
-    #     client_token=client_token,
-    # )
+    sample_row = {
+        "ACCTNO": "ABC",
+        "ACCTNAME": "บจก เกียรติชัยอะไหล่ยนต์ 2007",
+        "ADDR1": "123 ถนนสุขุมวิท",
+        "ADDR2": "แขวงตัวอย่าง เขตตัวอย่าง",
+        "PHONE": "02-123-4567",
+        "MOBILE": "0105555555555",
+        "FAX": "",
+        "EMAIL": "test@example.com",
+    }
 
-    # print("Status:", resp.status_code)
-    # print("Response:", resp.text)
+    contact_result = ensure_contact_from_row(
+        base_url=base_url,
+        connect_id=connect_id,
+        user_token=user_token,
+        client_token=client_token,
+        row=sample_row,
+    )
+
+    print(contact_result)

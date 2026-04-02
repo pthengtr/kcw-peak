@@ -106,12 +106,10 @@ def get_client_token(base_url: str, connect_id: str, password: str) -> dict:
         "raw": data
     }
 
-
-def test_products(base_url: str, connect_id: str, user_token: str, client_token: str):
+def _auth_headers(connect_id: str, user_token: str, client_token: str) -> dict:
     ts = _timestamp()
     sig = _signature(connect_id, ts)
-
-    headers = {
+    return {
         "Content-Type": "application/json",
         "Client-Token": client_token,
         "User-Token": user_token,
@@ -119,9 +117,66 @@ def test_products(base_url: str, connect_id: str, user_token: str, client_token:
         "Time-Signature": sig,
     }
 
-    resp = requests.get(
-        f"{base_url}/products",
-        headers=headers,
-        timeout=30,
-    )
-    return resp
+
+def peak_get(
+    *,
+    base_url: str,
+    path: str,
+    connect_id: str,
+    user_token: str,
+    client_token: str,
+    params: dict | None = None,
+) -> dict:
+    headers = _auth_headers(connect_id, user_token, client_token)
+    url = f"{base_url.rstrip('/')}{path}"
+
+    try:
+        resp = requests.get(url, headers=headers, params=params, timeout=30)
+    except Exception as e:
+        return {"ok": False, "error": f"Network error: {e}"}
+
+    try:
+        data = resp.json()
+    except Exception:
+        data = None
+
+    if resp.status_code != 200:
+        return {
+            "ok": False,
+            "error": f"HTTP {resp.status_code}",
+            "raw": data if data is not None else resp.text,
+        }
+
+    return {"ok": True, "data": data}
+
+
+def peak_post(
+    *,
+    base_url: str,
+    path: str,
+    connect_id: str,
+    user_token: str,
+    client_token: str,
+    payload: dict,
+) -> dict:
+    headers = _auth_headers(connect_id, user_token, client_token)
+    url = f"{base_url.rstrip('/')}{path}"
+
+    try:
+        resp = requests.post(url, headers=headers, json=payload, timeout=30)
+    except Exception as e:
+        return {"ok": False, "error": f"Network error: {e}"}
+
+    try:
+        data = resp.json()
+    except Exception:
+        data = None
+
+    if resp.status_code != 200:
+        return {
+            "ok": False,
+            "error": f"HTTP {resp.status_code}",
+            "raw": data if data is not None else resp.text,
+        }
+
+    return {"ok": True, "data": data}
