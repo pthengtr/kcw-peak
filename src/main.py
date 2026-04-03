@@ -1,8 +1,9 @@
 import os
+
 from dotenv import load_dotenv
 
-from src.peak_client import get_client_token
 from src.contacts import ensure_contact_from_row
+from src.peak_client import get_client_token
 
 
 def run():
@@ -41,7 +42,7 @@ def run():
         "EMAIL": "test@example.com",
     }
 
-    contact_result = ensure_contact_from_row(
+    result = ensure_contact_from_row(
         base_url=base_url,
         connect_id=connect_id,
         user_token=user_token,
@@ -49,4 +50,4 @@ def run():
         row=sample_row,
     )
 
-    print(contact_result)
+    print(result)

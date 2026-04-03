@@ -64,13 +64,22 @@ def detect_contact_type_from_name(name: str) -> Dict[str, str]:
 
     for pattern in company_patterns:
         if re.search(pattern, s):
-            return {"contact_type": "company", "reason": f"matched company pattern: {pattern}"}
+            return {
+                "contact_type": "company",
+                "reason": f"matched company pattern: {pattern}",
+            }
 
     for pattern in person_patterns:
         if re.search(pattern, s):
-            return {"contact_type": "person", "reason": f"matched person pattern: {pattern}"}
+            return {
+                "contact_type": "person",
+                "reason": f"matched person pattern: {pattern}",
+            }
 
-    return {"contact_type": "company", "reason": "fallback default: company"}
+    return {
+        "contact_type": "company",
+        "reason": "fallback default: company",
+    }
 
 
 def map_contact_row_to_peak_payload(row: Dict[str, Any]) -> Dict[str, Any]:
@@ -83,21 +92,28 @@ def map_contact_row_to_peak_payload(row: Dict[str, Any]) -> Dict[str, Any]:
     email = _clean_str(row.get("EMAIL"))
 
     type_info = detect_contact_type_from_name(acctname)
+    peak_type = 1 if type_info["contact_type"] == "company" else 0
 
-    # Adjust field names here to match the exact PEAK create-contact payload
-    payload = {
+    contact = {
         "code": acctno,
         "name": acctname,
-        "contactType": type_info["contact_type"],
-        "address": address,
-        "phone": phone,
+        "type": peak_type,
         "taxNumber": tax_number,
+        "address": address,
+        "callCenterNumber": phone,
+        "contactPhoneNumber": phone,
         "faxNumber": fax,
         "email": email,
+        "contactEmail": email,
     }
 
-    # Drop empty values
-    payload = {k: v for k, v in payload.items() if v not in ("", None)}
+    contact = {k: v for k, v in contact.items() if v not in ("", None)}
+
+    payload = {
+        "PeakContacts": {
+            "contacts": [contact]
+        }
+    }
 
     return {
         "payload": payload,
@@ -107,14 +123,24 @@ def map_contact_row_to_peak_payload(row: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _extract_contact_list_items(data: Dict[str, Any]) -> list[Dict[str, Any]]:
-    """
-    Adjust this once you confirm the exact PEAK response shape.
-    """
-    if isinstance(data, dict):
-        for key in ("data", "items", "list", "contacts"):
-            value = data.get(key)
-            if isinstance(value, list):
-                return value
+    if not isinstance(data, dict):
+        return []
+
+    # try common shapes first
+    for key in ("data", "items", "list", "contacts"):
+        value = data.get(key)
+        if isinstance(value, list):
+            return value
+
+    # PEAK-style nested shapes
+    for outer_key in ("PeakContacts", "peakContacts"):
+        outer = data.get(outer_key)
+        if isinstance(outer, dict):
+            for inner_key in ("contacts", "list", "items", "data"):
+                value = outer.get(inner_key)
+                if isinstance(value, list):
+                    return value
+
     return []
 
 
@@ -136,6 +162,38 @@ def _extract_contact_id(item: Dict[str, Any]) -> Optional[Any]:
     return None
 
 
+def _parse_create_contact_result(data: Dict[str, Any]) -> Dict[str, Any]:
+    peak_contacts = data.get("PeakContacts", {})
+    contacts = peak_contacts.get("contacts", [])
+
+    if not contacts:
+        return {"ok": False, "error": "No contacts result returned", "raw": data}
+
+    first = contacts[0]
+    row_code = str(first.get("resCode", "")).strip()
+    row_desc = str(first.get("resDesc", "")).strip()
+
+    if row_code == "100" and "duplicated" in row_desc.lower():
+        return {
+            "ok": False,
+            "is_duplicate": True,
+            "error": row_desc,
+            "raw": data,
+        }
+
+    if row_code in {"0", "200", ""}:
+        return {
+            "ok": True,
+            "raw": data,
+        }
+
+    return {
+        "ok": False,
+        "error": row_desc or f"Unexpected resCode={row_code}",
+        "raw": data,
+    }
+
+
 def find_contact_by_code(
     *,
     base_url: str,
@@ -154,13 +212,14 @@ def find_contact_by_code(
         connect_id=connect_id,
         user_token=user_token,
         client_token=client_token,
-        params=None,  # add query param later if PEAK supports it
+        params=None,
     )
 
     if not resp["ok"]:
         return resp
 
     items = _extract_contact_list_items(resp["data"])
+
     for item in items:
         if _match_contact_by_code(item, acctno):
             return {
@@ -190,7 +249,7 @@ def create_contact(
 
     resp = peak_post(
         base_url=base_url,
-        path="/Contacts",
+        path="/contacts/",
         connect_id=connect_id,
         user_token=user_token,
         client_token=client_token,
@@ -206,18 +265,49 @@ def create_contact(
             "raw": resp.get("raw"),
         }
 
-    # Adjust ID extraction after first real response
-    created_id = None
-    if isinstance(resp["data"], dict):
-        for key in ("id", "Id", "contactId", "ContactId"):
-            if key in resp["data"]:
-                created_id = resp["data"][key]
-                break
+    parsed = _parse_create_contact_result(resp["data"])
+
+    if parsed.get("ok"):
+        return {
+            "ok": True,
+            "peak_contact_id": None,
+            "action": "created",
+            "payload": mapped["payload"],
+            "detection_reason": mapped["detection_reason"],
+            "raw": resp["data"],
+        }
+
+    if parsed.get("is_duplicate"):
+        acctno = _normalize_code(row.get("ACCTNO"))
+        found = find_contact_by_code(
+            base_url=base_url,
+            connect_id=connect_id,
+            user_token=user_token,
+            client_token=client_token,
+            acctno=acctno,
+        )
+
+        if found.get("ok") and found.get("found"):
+            return {
+                "ok": True,
+                "peak_contact_id": found["peak_contact_id"],
+                "action": "found_after_duplicate",
+                "payload": mapped["payload"],
+                "detection_reason": mapped["detection_reason"],
+                "raw": resp["data"],
+            }
+
+        return {
+            "ok": False,
+            "error": "PEAK says duplicate, but lookup still failed",
+            "payload": mapped["payload"],
+            "detection_reason": mapped["detection_reason"],
+            "raw": resp["data"],
+        }
 
     return {
-        "ok": True,
-        "peak_contact_id": created_id,
-        "action": "created",
+        "ok": False,
+        "error": parsed.get("error", "Unknown create contact failure"),
         "payload": mapped["payload"],
         "detection_reason": mapped["detection_reason"],
         "raw": resp["data"],
