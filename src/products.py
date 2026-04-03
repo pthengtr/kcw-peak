@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 
 from src.peak_client import peak_get, peak_post
+from src.unit_mapper import map_unit
 
 
 def _clean_str(value: Any) -> str:
@@ -44,7 +45,10 @@ def map_product_row_to_peak_payload(
 
     product_code = _normalize_code(row.get("BCODE"))
     product_name = _clean_str(row.get("DESCR"))
-    unit_name = _clean_str(row.get("UI1"))
+
+    raw_unit_name = _clean_str(row.get("UI1"))
+    unit_result = map_unit(raw_unit_name)
+    unit_name = unit_result.peak_unit_name
 
     purchase_price = _clean_num(row.get("COSTNET"))
     sell_price = _clean_num(row.get("PRICE1"))
@@ -91,6 +95,14 @@ def map_product_row_to_peak_payload(
         "payload": payload,
         "product_code": product_code,
         "raw_product_payload": product,
+        "unit_mapping": {
+            "raw_unit": unit_result.raw_unit,
+            "normalized_unit": unit_result.normalized_unit,
+            "canonical_unit": unit_result.canonical_unit,
+            "peak_unit_name": unit_result.peak_unit_name,
+            "note": unit_result.note,
+            "used_fallback": unit_result.used_fallback,
+        },
     }
 
 
@@ -239,6 +251,7 @@ def create_product(
             "ok": False,
             "error": resp.get("error", "Create product failed"),
             "payload": mapped["payload"],
+            "unit_mapping": mapped.get("unit_mapping"),
             "raw": resp.get("raw"),
         }
 
@@ -251,6 +264,7 @@ def create_product(
             "action": "created",
             "product_code": mapped["product_code"],
             "payload": mapped["payload"],
+            "unit_mapping": mapped.get("unit_mapping"),
             "raw": resp["data"],
         }
 
@@ -270,6 +284,7 @@ def create_product(
                 "action": "found_after_duplicate",
                 "product_code": mapped["product_code"],
                 "payload": mapped["payload"],
+                "unit_mapping": mapped.get("unit_mapping"),
                 "raw": resp["data"],
             }
 
@@ -277,6 +292,7 @@ def create_product(
             "ok": False,
             "error": "PEAK says duplicate, but lookup still failed",
             "payload": mapped["payload"],
+            "unit_mapping": mapped.get("unit_mapping"),
             "raw": resp["data"],
         }
 

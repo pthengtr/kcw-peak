@@ -1,0 +1,242 @@
+raw_unit,canonical_unit,peak_unit_name,note
+อัน,อัน,อัน,
+ตัว,ตัว,ตัว,
+ชุด/,ชุด,ชุด,slash variant
+ลูก,ลูก,ลูก,
+แผ่น,แผ่น,แผ่น,
+เส้น,เส้น,เส้น,
+ชุด,ชุด,ชุด,
+ดวง,ดวง,ดวง,
+ท่อน,ท่อน,ท่อน,
+คู่,คู่,คู่,
+ตับ,ตับ,ตับ,
+ใบ,ใบ,ใบ,
+ม้วน,ม้วน,ม้วน,
+กล.,กล.,กล.,abbrev kept
+กป.,กป.,กป.,abbrev kept
+ชิ้น,ชิ้น,ชิ้น,
+หัว,หัว,หัว,
+ชุด/4,ชุด,ชุด,pack expression
+หน่วย,หน่วย,หน่วย,default fallback unit
+ถัง,ถัง,ถัง,
+ชุด2ข้าง,ชุด,ชุด,pack expression
+ชุด1ล้อ,ชุด,ชุด,pack expression
+หลอด,หลอด,หลอด,
+ฟุต,ฟุต,ฟุต,
+ห่อ,ห่อ,ห่อ,
+ตู้,ตู้,ตู้,
+บาน,บาน,บาน,
+กก.,กก.,กก.,
+ข้าง,ข้าง,ข้าง,
+ผืน,ผืน,ผืน,
+ชุด/2,ชุด,ชุด,pack expression
+ชุด/12,ชุด,ชุด,pack expression
+ลูกJ/P,ลูก,ลูก,suffix removed
+ชุด/6,ชุด,ชุด,pack expression
+ชุด/3,ชุด,ชุด,pack expression
+ตัว/6,ตัว,ตัว,pack expression
+ชุด/8,ชุด,ชุด,pack expression
+ตัว.,ตัว,ตัว,punctuation variant
+เส้น.,เส้น,เส้น,punctuation variant
+3,หน่วย,หน่วย,non-unit token
+กล่อง,กล่อง,กล่อง,
+สูบ,สูบ,สูบ,
+ตัวละ,ตัว,ตัว,suffix removed
+ลัง,ลัง,ลัง,
+เม็ด,เม็ด,เม็ด,
+ตัว@,ตัว,ตัว,symbol variant
+ต้น,ต้น,ต้น,
+วง,วง,วง,
+ชุด/ลูก,ชุด,ชุด,pack expression
+ชุด/2เส้น,ชุด,ชุด,pack expression
+ขวด,ขวด,ขวด,
+บ่า,บ่า,บ่า,
+ชุด@,ชุด,ชุด,symbol variant
+ถุง/2,ถุง,ถุง,pack expression
+ฝา,ฝา,ฝา,
+บ.แท้,หน่วย,หน่วย,non-unit token
+15.41,หน่วย,หน่วย,non-unit token
+แผง,แผง,แผง,
+เมตร,เมตร,เมตร,
+ส้น,ส้น,ส้น,
+CZO,หน่วย,หน่วย,non-unit token
+ชุด/2ผ.,ชุด,ชุด,pack expression
+แท้,หน่วย,หน่วย,non-unit token
+Gเส้น,เส้น,เส้น,prefix noise
+อันล,อัน,อัน,typo
+ลูก@,ลูก,ลูก,symbol variant
+ม.,เมตร,เมตร,abbrev normalized
+ดว,ดวง,ดวง,typo
+ชด,ชุด,ชุด,typo
+เส้น@,เส้น,เส้น,symbol variant
+ลุก,ลูก,ลูก,typo
+ดอก,ดอก,ดอก,
+แผ่น/2,แผ่น,แผ่น,pack expression
+หลด,หลอด,หลอด,typo
+ชุด16ตัว,ชุด,ชุด,pack expression
+เส้น/1,เส้น,เส้น,pack expression
+ชุด/16,ชุด,ชุด,pack expression
+ชุด/5,ชุด,ชุด,pack expression
+เเผ่น,แผ่น,แผ่น,typo
+ละ,หน่วย,หน่วย,non-unit token
+ถุง,ถุง,ถุง,
+เส้น*,เส้น,เส้น,symbol variant
+ตั.,ตัว,ตัว,typo
+1ข้าง,ข้าง,ข้าง,count prefix removed
+ท่อ,ท่อ,ท่อ,
+ต้ว,ตัว,ตัว,typo
+ชุด/ข้าง,ชุด,ชุด,pack expression
+กป,กป.,กป.,variant
+หัวน็อตหัว,หัว,หัว,normalized
+นิ้ว,นิ้ว,นิ้ว,
+ตร.นิ้ว,ตร.นิ้ว,ตร.นิ้ว,
+ดวงละ,ดวง,ดวง,suffix removed
+ชุด/คัน,ชุด,ชุด,pack expression
+ม.@,เมตร,เมตร,symbol variant
+ตัว*,ตัว,ตัว,symbol variant
+ขีด,ขีด,ขีด,
+หน่วยละ,หน่วย,หน่วย,suffix removed
+4หัว,หัว,หัว,count prefix removed
+ซอง,ซอง,ซอง,
+ตลับ,ตลับ,ตลับ,
+ก.ก,กก.,กก.,variant
+เล่ม,เล่ม,เล่ม,
+Kg,กก.,กก.,english variant
+เครื่อง,เครื่อง,เครื่อง,
+VYO,หน่วย,หน่วย,non-unit token
+คู่/ชุด,คู่,คู่,pack expression
+ชุด4ดวง,ชุด,ชุด,pack expression
+ชูด,ชุด,ชุด,typo
+กล,กล.,กล.,variant
+แกลอน,แกลลอน,แกลลอน,variant
+ชุด/4ลูก,ชุด,ชุด,pack expression
+ชุด/1ล้อ,ชุด,ชุด,pack expression
+ชุด1ข้าง,ชุด,ชุด,pack expression
+ชุด/1สูบ,ชุด,ชุด,pack expression
+แผ่น/คู่,แผ่น,แผ่น,pack expression
+ถุง/กก.,ถุง,ถุง,pack expression
+ชุด/4 ตัว,ชุด,ชุด,pack expression
+แฟ่น,แผ่น,แผ่น,typo
+ชุด/6สูบ,ชุด,ชุด,pack expression
+เมตรละ,เมตร,เมตร,suffix removed
+9y[,หน่วย,หน่วย,non-unit token
+ชุดo,ชุด,ชุด,typo
+ชุด/2ตัว,ชุด,ชุด,pack expression
+ขุด,ชุด,ชุด,typo
+TC,หน่วย,หน่วย,non-unit token
+ชุด/ล้อ,ชุด,ชุด,pack expression
+บาท,หน่วย,หน่วย,non-unit token
+ชุด/4ตัว,ชุด,ชุด,pack expression
+ปิ๊บ,ปิ๊บ,ปิ๊บ,
+ก.ป.,กป.,กป.,variant
+ก.ล.,กล.,กล.,variant
+ชุด2ล้อ,ชุด,ชุด,pack expression
+ชุด/4หัว,ชุด,ชุด,pack expression
+ลิตร,ลิตร,ลิตร,
+1ชุดคัน,ชุด,ชุด,pack expression
+8J,หน่วย,หน่วย,non-unit token
+แพ็ค,แพ็ค,แพ็ค,
+เก่า,หน่วย,หน่วย,non-unit token
+ชุเ,ชุด,ชุด,typo
+ลูก/6,ลูก,ลูก,pack expression
+ชุด10ตัว,ชุด,ชุด,pack expression
+ชุด9ตัว,ชุด,ชุด,pack expression
+10ก/ชุด,ชุด,ชุด,pack expression
+6ก/ชุด,ชุด,ชุด,pack expression
+5ตัว/ชุด,ชุด,ชุด,pack expression
+ชุด/3ชิ้น,ชุด,ชุด,pack expression
+ชุด/2คู่,ชุด,ชุด,pack expression
+อันชุด,ชุด,ชุด,normalized
+เสัน,เส้น,เส้น,typo
+ชุด12,ชุด,ชุด,pack expression
+1ล้อ,ล้อ,ล้อ,count prefix removed
+BOSCH,หน่วย,หน่วย,non-unit token
+3แผ่นชุด,ชุด,ชุด,pack expression
+ครั้ง,ครั้ง,ครั้ง,
+เบ้าส์,เบ้าส์,เบ้าส์,
+ชุด/14,ชุด,ชุด,pack expression
+แท่ง,แท่ง,แท่ง,
+ชุด/10,ชุด,ชุด,pack expression
+ชุด3,ชุด,ชุด,pack expression
+ดว',ดวง,ดวง,typo
+เส้น/6,เส้น,เส้น,pack expression
+ชุด/5ก.,ชุด,ชุด,pack expression
+ตร.ม.,ตร.ม.,ตร.ม.,
+คัน,คัน,คัน,
+Mท่อน,ท่อน,ท่อน,prefix noise
+ชุดคัน,ชุด,ชุด,pack expression
+ชุด2ตัว,ชุด,ชุด,pack expression
+ชุด/9,ชุด,ชุด,pack expression
+ชุด/7ก.,ชุด,ชุด,pack expression
+กิโล,กก.,กก.,spoken variant
+9ตัว/ชุด,ชุด,ชุด,pack expression
+ชุด2แผ่น,ชุด,ชุด,pack expression
+4อัน/ชุด,ชุด,ชุด,pack expression
+4/ชุด,ชุด,ชุด,pack expression
+ลูด,ลูก,ลูก,typo
+8/ชุด,ชุด,ชุด,pack expression
+8/กล่อง,กล่อง,กล่อง,pack expression
+ตับ*,ตับ,ตับ,symbol variant
+4/ตัวชุด,ชุด,ชุด,pack expression
+อัน@,อัน,อัน,symbol variant
+กระป๋อง,กระป๋อง,กระป๋อง,
+ชุด/4สูบ,ชุด,ชุด,pack expression
+ก้อน,ก้อน,ก้อน,
+7กล่อง/ชุด,ชุด,ชุด,pack expression
+5กล่อง/ชุด,ชุด,ชุด,pack expression
+คู่/2,คู่,คู่,pack expression
+ชุด/1,ชุด,ชุด,pack expression
+ปี๊บ,ปิ๊บ,ปิ๊บ,variant
+ชุด/12เส้น,ชุด,ชุด,pack expression
+คู่/L-R,คู่,คู่,left right pair
+ชุด/20หัว,ชุด,ชุด,pack expression
+เดี่ยว,เดี่ยว,เดี่ยว,
+ชุด/3ตัว,ชุด,ชุด,pack expression
+อันละ,อัน,อัน,suffix removed
+ถุง30เม็ด,ถุง,ถุง,pack expression
+1,หน่วย,หน่วย,non-unit token
+แผ่นละ,แผ่น,แผ่น,suffix removed
+ชิ้นละ,ชิ้น,ชิ้น,suffix removed
+คัว,ตัว,ตัว,typo
+ชุดเล็ก,ชุด,ชุด,normalized
+120,หน่วย,หน่วย,non-unit token
+.,หน่วย,หน่วย,non-unit token
+ตัว99,ตัว,ตัว,count suffix removed
+ซม.,ซม.,ซม.,
+1สูบ,สูบ,สูบ,count prefix removed
+CM,ซม.,ซม.,english variant
+ถุง10เม็ด,ถุง,ถุง,pack expression
+เซน,ซม.,ซม.,spoken variant
+38-TG0370,หน่วย,หน่วย,non-unit token
+กระสอบ,กระสอบ,กระสอบ,
+ชุด/6อัน,ชุด,ชุด,pack expression
+ชุด 22เม็ด,ชุด,ชุด,pack expression
+ตัว8,ตัว,ตัว,count suffix removed
+ซีกละ,ซีก,ซีก,suffix removed
+แพ็คคู่,แพ็ค,แพ็ค,pack expression
+ชุด/4แถว,ชุด,ชุด,pack expression
+ชุด/2แผ่น,ชุด,ชุด,pack expression
+ชุด/8ชิ้น,ชุด,ชุด,pack expression
+หลัง,หลัง,หลัง,
+ชุด/6ตัว,ชุด,ชุด,pack expression
+สูบละ,สูบ,สูบ,suffix removed
+ชุด/3เส้น,ชุด,ชุด,pack expression
+ชุด/6ชิ้น,ชุด,ชุด,pack expression
+พวง,พวง,พวง,
+ชุด/4ชิ้น,ชุด,ชุด,pack expression
+ตุัว,ตัว,ตัว,typo
+DK,หน่วย,หน่วย,non-unit token
+ชุด/5ชิ้น,ชุด,ชุด,pack expression
+ก้าม,ก้าม,ก้าม,
+ชุด/2อัน,ชุด,ชุด,pack expression
+ชุด/5ตัว,ชุด,ชุด,pack expression
+ชุด/5ผืน,ชุด,ชุด,pack expression
+ถุง/10เม็ด,ถุง,ถุง,pack expression
+กล่อง/2คู่,กล่อง,กล่อง,pack expression
+แกลลอน,แกลลอน,แกลลอน,
+2ตัว/ชุด,ชุด,ชุด,pack expression
+แยก,หน่วย,หน่วย,non-unit token
+ชุด (4สูบ),ชุด,ชุด,pack expression
+ถ้วย,ถ้วย,ถ้วย,
+HNEC,หน่วย,หน่วย,non-unit token
+ถัง 10L,ถัง,ถัง,pack expression
