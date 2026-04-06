@@ -37,52 +37,43 @@ def map_product_row_to_peak_payload(
     """
     Map one KCW product row into PEAK product create payload.
 
-    IMPORTANT:
-    - field names below are based on our current best understanding and may need
-      small adjustment after first live API response
-    - opening stock is intentionally excluded from create-product v1
+    Current approach:
+    - keep payload close to documented PEAK product fields
+    - use unit by PEAK unit code from unit_mapping.csv
+    - keep account fields only if explicitly provided
     """
-
     product_code = _normalize_code(row.get("BCODE"))
     product_name = _clean_str(row.get("DESCR"))
-
     raw_unit_name = _clean_str(row.get("UI1"))
+
     unit_result = map_unit(raw_unit_name)
-    unit_name = unit_result.peak_unit_name
 
     purchase_price = _clean_num(row.get("COSTNET"))
     sell_price = _clean_num(row.get("PRICE1"))
-
     is_vat = _normalize_yes_no(row.get("ISVAT"))
+
     purchase_vat_type = 3 if is_vat == "Y" else 1
     sell_vat_type = 3
 
-    # PEAK stock / cost assumptions for v1:
-    # - this is a stock product, not service
-    # - cost should be calculated
-    # - FIFO
     product = {
         "code": product_code,
         "name": product_name,
-        "unitName": unit_name,
         "purchaseValue": purchase_price,
         "purchaseVatType": purchase_vat_type,
         "sellValue": sell_price,
         "sellVatType": sell_vat_type,
         "description": product_name,
-
-        # inventory / costing behavior
-        "productType": 1,             # assumption: 1 = stock product
-        "isCalculateCost": True,      # assumption: enable costing
-        "costMethod": "FIFO",         # assumption: FIFO enum/name
-
-        # default accounts
-        "purchaseAccountId": purchase_account_id,
-        "salesAccountId": sales_account_id,
-        "costOfGoodsSoldAccountId": cogs_account_id,
+        "unit": {"code": unit_result.peak_unit_code},
     }
 
-    # drop empty values
+    # keep these optional for now
+    if purchase_account_id not in ("", None):
+        product["purchaseAccountId"] = purchase_account_id
+    if sales_account_id not in ("", None):
+        product["salesAccountId"] = sales_account_id
+    if cogs_account_id not in ("", None):
+        product["costOfGoodsSoldAccountId"] = cogs_account_id
+
     product = {k: v for k, v in product.items() if v not in ("", None)}
 
     payload = {
@@ -100,6 +91,7 @@ def map_product_row_to_peak_payload(
             "normalized_unit": unit_result.normalized_unit,
             "canonical_unit": unit_result.canonical_unit,
             "peak_unit_name": unit_result.peak_unit_name,
+            "peak_unit_code": unit_result.peak_unit_code,
             "note": unit_result.note,
             "used_fallback": unit_result.used_fallback,
         },
@@ -190,18 +182,17 @@ def find_product_by_code(
 
     resp = peak_get(
         base_url=base_url,
-        path="/Products/list",
+        path="/products",
         connect_id=connect_id,
         user_token=user_token,
         client_token=client_token,
-        params=None,
+        params={"code": product_code},
     )
 
     if not resp["ok"]:
         return resp
 
     items = _extract_product_list_items(resp["data"])
-
     for item in items:
         if _match_product_by_code(item, product_code):
             return {
@@ -276,7 +267,6 @@ def create_product(
             client_token=client_token,
             product_code=mapped["product_code"],
         )
-
         if found.get("ok") and found.get("found"):
             return {
                 "ok": True,
@@ -326,7 +316,6 @@ def ensure_product_from_row(
         client_token=client_token,
         product_code=product_code,
     )
-
     if not found["ok"]:
         return found
 

@@ -7,10 +7,11 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 UNIT_MAPPING_PATH = REPO_ROOT / "data" / "unit_mapping.csv"
+
 DEFAULT_FALLBACK_UNIT = "หน่วย"
+DEFAULT_FALLBACK_UNIT_CODE = "PU0017"
 
 
 @dataclass
@@ -19,6 +20,7 @@ class UnitMappingResult:
     normalized_unit: str
     canonical_unit: str
     peak_unit_name: str
+    peak_unit_code: str
     note: str
     used_fallback: bool
 
@@ -61,12 +63,15 @@ def load_unit_mapping() -> dict[str, dict[str, str]]:
         reader = csv.DictReader(f)
         for row in reader:
             raw_unit = _clean_str(row.get("raw_unit"))
-            if raw_unit:
-                mapping[raw_unit] = {
-                    "canonical_unit": _clean_str(row.get("canonical_unit")),
-                    "peak_unit_name": _clean_str(row.get("peak_unit_name")),
-                    "note": _clean_str(row.get("note")),
-                }
+            if not raw_unit:
+                continue
+
+            mapping[raw_unit] = {
+                "canonical_unit": _clean_str(row.get("canonical_unit")),
+                "peak_unit_name": _clean_str(row.get("peak_unit_name")),
+                "peak_unit_code": _clean_str(row.get("peak_unit_code")),
+                "note": _clean_str(row.get("note")),
+            }
 
     return mapping
 
@@ -86,6 +91,7 @@ def map_unit(raw_unit: Any) -> UnitMappingResult:
     if row:
         canonical_unit = row.get("canonical_unit") or DEFAULT_FALLBACK_UNIT
         peak_unit_name = row.get("peak_unit_name") or DEFAULT_FALLBACK_UNIT
+        peak_unit_code = row.get("peak_unit_code") or DEFAULT_FALLBACK_UNIT_CODE
         note = row.get("note") or ""
 
         return UnitMappingResult(
@@ -93,8 +99,9 @@ def map_unit(raw_unit: Any) -> UnitMappingResult:
             normalized_unit=normalized,
             canonical_unit=canonical_unit,
             peak_unit_name=peak_unit_name,
+            peak_unit_code=peak_unit_code,
             note=note,
-            used_fallback=(peak_unit_name == DEFAULT_FALLBACK_UNIT),
+            used_fallback=(peak_unit_code == DEFAULT_FALLBACK_UNIT_CODE),
         )
 
     return UnitMappingResult(
@@ -102,6 +109,7 @@ def map_unit(raw_unit: Any) -> UnitMappingResult:
         normalized_unit=normalized,
         canonical_unit=DEFAULT_FALLBACK_UNIT,
         peak_unit_name=DEFAULT_FALLBACK_UNIT,
+        peak_unit_code=DEFAULT_FALLBACK_UNIT_CODE,
         note="not found in unit_mapping.csv",
         used_fallback=True,
     )

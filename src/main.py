@@ -36,31 +36,31 @@ def run():
     client_token = result["token"]
     print("Client token acquired.")
 
-    sample_row = {
-        "ACCTNO": "ABC",
-        "ACCTNAME": "บจก เกียรติชัยอะไหล่ยนต์ 2007",
-        "ADDR1": "123 ถนนสุขุมวิท",
-        "ADDR2": "แขวงตัวอย่าง เขตตัวอย่าง",
-        "PHONE": "02-123-4567",
-        "MOBILE": "0105555555555",
-        "FAX": "",
-        "EMAIL": "test@example.com",
-    }
+    # sample_row = {
+    #     "ACCTNO": "ABC",
+    #     "ACCTNAME": "บจก เกียรติชัยอะไหล่ยนต์ 2007",
+    #     "ADDR1": "123 ถนนสุขุมวิท",
+    #     "ADDR2": "แขวงตัวอย่าง เขตตัวอย่าง",
+    #     "PHONE": "02-123-4567",
+    #     "MOBILE": "0105555555555",
+    #     "FAX": "",
+    #     "EMAIL": "test@example.com",
+    # }
 
-    result = ensure_contact_from_row(
-        base_url=base_url,
-        connect_id=connect_id,
-        user_token=user_token,
-        client_token=client_token,
-        row=sample_row,
-    )
+    # result = ensure_contact_from_row(
+    #     base_url=base_url,
+    #     connect_id=connect_id,
+    #     user_token=user_token,
+    #     client_token=client_token,
+    #     row=sample_row,
+    # )
 
     print(result)
 
     sample_product_row = {
         "BCODE": "TEST001",
-        "DESCR": "ผ้าเบรคหน้า TEST",
-        "UI1": "ชิ้น",
+        "DESCR": "น้ำมันเครื่อง TEST",
+        "UI1": "กล.",
         "COSTNET": 100.0,
         "PRICE1": 150.0,
         "ISVAT": "Y",
