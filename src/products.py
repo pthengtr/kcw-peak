@@ -37,19 +37,36 @@ def map_product_row_to_peak_payload(
     """
     Map one KCW product row into PEAK product create payload.
 
-    Current approach:
-    - keep payload close to documented PEAK product fields
-    - use unit by PEAK unit code from unit_mapping.csv
-    - keep account fields only if explicitly provided
+    Key design:
+    - name = DESCR | BCODE  (to avoid PEAK duplicate issues)
+    - description = DESCR | BCODE | MODEL | BRAND
+    - unit uses PEAK unit code from unit_mapper
     """
-    product_code = _normalize_code(row.get("BCODE"))
-    product_name = _clean_str(row.get("DESCR"))
-    raw_unit_name = _clean_str(row.get("UI1"))
 
+    product_code = _normalize_code(row.get("BCODE"))
+    base_name = _clean_str(row.get("DESCR"))
+
+    model = _clean_str(row.get("MODEL"))
+    brand = _clean_str(row.get("BRAND"))
+
+    # ===== name (must be unique enough for PEAK) =====
+    name_parts = [base_name, product_code]
+    name_parts = [x for x in name_parts if x]
+    product_name = " | ".join(name_parts)
+
+    # ===== description (rich but safe) =====
+    desc_parts = [base_name, product_code, model, brand]
+    desc_parts = [x for x in desc_parts if x]
+    product_description = " | ".join(desc_parts)
+
+    # ===== unit mapping =====
+    raw_unit_name = _clean_str(row.get("UI1"))
     unit_result = map_unit(raw_unit_name)
 
+    # ===== pricing =====
     purchase_price = _clean_num(row.get("COSTNET"))
     sell_price = _clean_num(row.get("PRICE1"))
+
     is_vat = _normalize_yes_no(row.get("ISVAT"))
 
     purchase_vat_type = 3 if is_vat == "Y" else 1
@@ -62,18 +79,21 @@ def map_product_row_to_peak_payload(
         "purchaseVatType": purchase_vat_type,
         "sellValue": sell_price,
         "sellVatType": sell_vat_type,
-        "description": product_name,
+        "description": product_description,
         "unit": {"code": unit_result.peak_unit_code},
     }
 
-    # keep these optional for now
+    # ===== optional accounts =====
     if purchase_account_id not in ("", None):
         product["purchaseAccountId"] = purchase_account_id
+
     if sales_account_id not in ("", None):
         product["salesAccountId"] = sales_account_id
+
     if cogs_account_id not in ("", None):
         product["costOfGoodsSoldAccountId"] = cogs_account_id
 
+    # remove empty values
     product = {k: v for k, v in product.items() if v not in ("", None)}
 
     payload = {

@@ -1,10 +1,13 @@
 import os
 
 from dotenv import load_dotenv
+import pandas as pd
 
 from src.contacts import ensure_contact_from_row
 from src.peak_client import get_client_token
 from src.products import ensure_product_from_row
+from src.bill_sync import sync_one_bill
+
 
 
 def run():
@@ -36,6 +39,24 @@ def run():
     client_token = result["token"]
     print("Client token acquired.")
 
+
+    df_bill = pd.read_csv(r"G:\Shared drives\KCW-Data\kcw_analytics\03_curated\fact_sales_bills_all.csv", dtype=str).fillna("")
+
+    bill_row = df_bill[df_bill["BILLNO"] == "TR6903-002"].iloc[0]
+
+    result = sync_one_bill(
+        bill_row=bill_row,   # pd.Series or dict
+        base_url=base_url,
+        connect_id=connect_id,
+        user_token=user_token,
+        client_token=client_token,
+        purchase_account_id=purchase_account_id,
+        sales_account_id=sales_account_id,
+        cogs_account_id=cogs_account_id,
+    )
+
+    print(result)
+
     # sample_row = {
     #     "ACCTNO": "ABC",
     #     "ACCTNAME": "บจก เกียรติชัยอะไหล่ยนต์ 2007",
@@ -55,30 +76,30 @@ def run():
     #     row=sample_row,
     # )
 
-    print(result)
+    # print(result)
 
-    sample_product_row = {
-        "BCODE": "TEST001",
-        "DESCR": "น้ำมันเครื่อง TEST",
-        "UI1": "กล.",
-        "COSTNET": 100.0,
-        "PRICE1": 150.0,
-        "ISVAT": "Y",
-        "END": 10,
-        "AV_COST": 100.0,
-    }
+    # sample_product_row = {
+    #     "BCODE": "TEST001",
+    #     "DESCR": "น้ำมันเครื่อง TEST",
+    #     "UI1": "กล.",
+    #     "COSTNET": 100.0,
+    #     "PRICE1": 150.0,
+    #     "ISVAT": "Y",
+    #     "END": 10,
+    #     "AV_COST": 100.0,
+    # }
 
-    result = ensure_product_from_row(
-        base_url=base_url,
-        connect_id=connect_id,
-        user_token=user_token,
-        client_token=client_token,
-        row=sample_product_row,
+    # result = ensure_product_from_row(
+    #     base_url=base_url,
+    #     connect_id=connect_id,
+    #     user_token=user_token,
+    #     client_token=client_token,
+    #     row=sample_product_row,
 
-        # replace these with your real PEAK default account ids
-        purchase_account_id=purchase_account_id,
-        sales_account_id=sales_account_id,
-        cogs_account_id=cogs_account_id,
-    )
+    #     # replace these with your real PEAK default account ids
+    #     purchase_account_id=purchase_account_id,
+    #     sales_account_id=sales_account_id,
+    #     cogs_account_id=cogs_account_id,
+    # )
 
-    print(result)
+    # print(result)
